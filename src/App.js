@@ -1,16 +1,64 @@
 import React, { useState, useEffect, useRef } from "react";
 
 function App() {
+
+  const fileContents = {
+    education: `Education:
+- MSc in Computer Science and Engineering - Cybersecurity, Instituto Superior Técnico - University of Lisbon
+- BSc in Computer Science and Engineering, Instituto Superior Técnico - University of Lisbon`,
+    experience: `Work Experience:
+- Cybersecurity Analyst at .PT (Sep 2024 - Present)
+- Distributed Systems Researcher at INESC-ID (Oct 2023- Sep 2024)
+- Teaching Assistant at Instituto Superior Técnico (2022 - 2024)`,
+    projects: `Projects:
+- Built this interactive terminal portfolio`,
+    interests: `Interests:
+- Network security
+- Ethical hacking
+- STEM Gender Equality
+- Reading`,
+    links: `Links:
+- GitHub: github.com/catarinab
+- LinkedIn: linkedin.com/in/catarinascb2
+- Website: catarinabento.pt`
+  };
+
+  
   const commands = {
-    help: "Available commands: help, whoami, clear, echo [text], ls",
-    whoami: "You are a React user!",
+    help: `Available commands: 
+help: get a list of commands
+whoami: get to know me
+ls: get <files> -> list of insterests, experiences, and projects
+cat <file>: get to know me
+clear: clear the terminal
+echo <text>: echo the text back
+`,
+    whoami: `I am a cybersecurity analyst at .PT, the top level domain of Portugal!
+To get to know more about me, type 'cat <file>' or 'ls' to see my interests, experiences, and projects.`,
     clear: "",
-    ls: "Desktop Documents Downloads Music Pictures Videos",
+    ls: "Education \nExperience \nInterests \nLinks",
+    cat: (file) => {
+      if (!file || file.trim() === "") {
+        return "Please specify a file to read. Use 'ls' to see available files.";
+      }
+      
+      const fileName = file.trim().toLowerCase();
+      if (fileContents[fileName]) {
+        return fileContents[fileName];
+      } else {
+        return `cat: ${file}: No such file or directory`;
+      }
+    },
     echo: (args) => args,
   };
 
   const [input, setInput] = useState("");
-const [history, setHistory] = useState([]);
+  const [history, setHistory] = useState([
+    {
+      type: "message",
+      content: "Hi there! Type 'help' for a list of commands :)"
+    }
+  ]);
   const terminalEndRef = useRef(null);
   const inputRef = useRef(null);
 
@@ -81,26 +129,30 @@ const [history, setHistory] = useState([]);
           <div style={styles.title}>catarinab — myzsh — 80×24</div>
         </div>
         <div style={styles.terminalBody} onClick={handleTerminalClick}>
-          {history.map((entry, index) => (
-            <div key={index} style={styles.historyEntry}>
-              <div style={styles.commandLine}>
-                <span style={styles.prompt}>
-                  <span style={styles.green}>cat@portfolio</span>
-                  <span style={styles.white}>:</span>
-                  <span style={styles.blue}>~</span>
-                  <span style={styles.white}>$&nbsp;</span>
-                </span>{" "}
-                <span>{entry.command}</span>
+        {history.map((entry, index) => (
+          <div key={index} style={styles.historyEntry}>
+            {entry.type === "message" ? (
+              // Render direct messages without a prompt
+              <div style={{...styles.output, paddingLeft: 0}}>
+                {entry.content}
               </div>
-              {entry.output && (
-                <div style={styles.output}>
-                  {entry.output.split('\n').map((line, i) => (
-                    <div key={i}>{line}</div>
-                  ))}
+            ) : (
+              // Render regular command entries as before
+              <>
+                <div style={styles.commandLine}>
+                  <span style={styles.prompt}>
+                    <span style={styles.green}>cat@portfolio</span>
+                    <span style={styles.white}>:</span>
+                    <span style={styles.blue}>~</span>
+                    <span style={styles.white}>$ </span>
+                  </span>{" "}
+                  <span>{entry.command}</span>
                 </div>
-              )}
-            </div>
-          ))}
+                {entry.output && <div style={styles.output}>{entry.output}</div>}
+              </>
+            )}
+          </div>
+        ))}
           
           {/* Current input line */}
           <form onSubmit={handleSubmit} style={styles.inputLine}>
@@ -211,18 +263,23 @@ const styles = {
     color: "#fff",
     fontSize: FONT_SIZE,
     display: "flex",
-    alignItems: "center",
+    alignItems: "flex-start",
     whiteSpace: "pre-wrap",
     wordBreak: "break-word",
+    flexWrap: "wrap",
+    width: "100%",
   },
   output: {
     fontSize: FONT_SIZE,
-    color: '#fff',
+    color: "#fff",
     marginTop: "2px",
     marginBottom: "6px",
     paddingLeft: "10px",
-    whiteSpace: "pre", // Changed from pre-wrap to preserve exact spacing
-    fontFamily: "monospace", // Make sure to use monospace for ASCII art
+    whiteSpace: "pre-wrap",
+    wordBreak: "break-word",
+    overflowWrap: "break-word",
+    width: "100%",
+    boxSizing: "border-box",
   },
   inputLine: {
     display: "flex",
@@ -237,6 +294,8 @@ const styles = {
   prompt: {
     display: "inline-flex",
     alignItems: "center",
+    flexShrink: 0,
+    marginRight: "5px",
   },
   input: {
     flex: 1,
