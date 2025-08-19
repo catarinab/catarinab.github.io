@@ -29,12 +29,12 @@ function App() {
 help: get a list of commands
 whoami: get to know me
 ls: get <files> -> list of insterests, experiences, and projects
-cat <file>: get to know me
+cat <file>: get to know me (for example, 'cat Education')
 clear: clear the terminal
 echo <text>: echo the text back
 `,
     whoami: `I am a cybersecurity analyst at .PT, the top level domain of Portugal!
-To get to know more about me, type 'cat <file>' or 'ls' to see my interests, experiences, and projects.`,
+To get to know more about me, type 'cat <file>' (for example, 'cat Education') or 'ls' to see my interests, experiences, and projects.`,
     clear: "",
     ls: "Education \nExperience \nInterests \nLinks",
     cat: (file) => {
