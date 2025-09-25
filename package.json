@@ -1,7 +1,7 @@
 {
   "name": "portfolio",
   "version": "0.1.0",
-  "homepage": "https://catarinabento.pt",
+  "homepage": "https://catarinabento.pt/react",
   "private": true,
   "dependencies": {
     "@testing-library/dom": "^10.4.0",
