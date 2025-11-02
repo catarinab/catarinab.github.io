@@ -43,6 +43,15 @@ a:hover {
   color:#069;
 }
 
+a.cloudflare {
+  color: #F48120;
+  text-decoration:none;
+}
+
+a.cloudflare:hover {
+  color: #FAAD3F;
+}
+
 a small {
   font-size:11px;
   color:#777;
